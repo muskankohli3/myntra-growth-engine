@@ -4,22 +4,17 @@ function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <header>
-        <h1>Myntra Growth Engine</h1>
-      </header>
+    <div className="min-h-screen bg-pink-100 flex flex-col items-center justify-center gap-6">
+      <h1 className="text-5xl font-bold text-pink-600">
+        Myntra Growth Engine
+      </h1>
 
-      <main>
-        <h2>Choose your role</h2>
-
-        <button onClick={() => navigate("/customer/home")}>
-          Continue as Customer
-        </button>
-
-        <button onClick={() => navigate("/seller/dashboard")}>
-          Continue as Seller
-        </button>
-      </main>
+      <button
+        onClick={() => navigate("/customer/home")}
+        className="bg-pink-500 text-white px-6 py-3 rounded-xl"
+      >
+        Continue as Customer
+      </button>
     </div>
   );
 }
