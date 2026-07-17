@@ -1,21 +1,23 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
-# Environment variables
+# Environment files
 .env
-**/.env
-
-# Build output
-dist/
+*.env
 
 # Logs
 *.log
 npm-debug.log*
 
+# Build outputs
+dist/
+build/
+
 # OS files
 .DS_Store
 Thumbs.db
 
-# Editor
+# IDE files
 .vscode/
 .idea/
