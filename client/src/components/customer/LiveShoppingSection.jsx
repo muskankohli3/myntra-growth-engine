@@ -18,7 +18,10 @@ function LiveShoppingSection() {
           🔴 Live Shopping
         </h2>
 
-        <button className="text-pink-600 font-semibold">
+        <button
+          onClick={() => navigate("/customer/discovery")}
+          className="text-pink-600 font-semibold"
+        >
           See All
         </button>
       </div>
@@ -52,7 +55,11 @@ function LiveShoppingSection() {
             </p>
 
             <button
-              onClick={() => navigate("/customer/live")}
+              onClick={() =>
+                navigate("/customer/live", {
+                  state: session,
+                })
+              }
               className="mt-4 w-full rounded-lg bg-pink-500 py-2 text-white"
             >
               Join Live

@@ -2,10 +2,14 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const liveSessionRoutes = require("./routes/liveSessionRoutes");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/live-sessions", liveSessionRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -5,6 +5,7 @@ import CustomerHome from "../pages/CustomerHome";
 import LiveDiscovery from "../pages/LiveDiscovery";
 import LiveSession from "../pages/LiveSession";
 import Checkout from "../pages/Checkout";
+import OrderSuccess from "../pages/OrderSuccess";
 
 function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ function AppRoutes() {
         <Route path="/customer/live" element={<LiveSession />} />
         <Route path="/customer/checkout" element={<Checkout />} />
         <Route path="/seller/dashboard" element={<h1>Seller Dashboard</h1>} />
+        <Route path="/customer/order-success" element={<OrderSuccess />} />
       </Routes>
     </BrowserRouter>
   );
