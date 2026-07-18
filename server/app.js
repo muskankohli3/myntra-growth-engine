@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+
 const opportunityRoutes = require("./routes/opportunityRoutes");
-const app = express();
 const businessHealthRoutes = require("./routes/businessHealthRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+
+const productRoutes = require("./routes/productRoutes");
+const liveSessionRoutes = require("./routes/liveSessionRoutes");
 
 // Middleware
 app.use(cors());
@@ -18,12 +21,10 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/opportunities", opportunityRoutes);
-
-app.use(
-  "/api/business-health",
-  businessHealthRoutes
-);
-
+app.use("/api/business-health", businessHealthRoutes);
 app.use("/api/analytics", analyticsRoutes);
+
+app.use("/api/products", productRoutes);
+app.use("/api/live-sessions", liveSessionRoutes);
 
 module.exports = app;
