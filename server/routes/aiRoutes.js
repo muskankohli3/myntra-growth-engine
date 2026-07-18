@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   explainOpportunity,
   predictDemand,
+  reviveProduct,
 } = require("../controllers/aiController");
 
 router.get(
@@ -15,6 +16,11 @@ router.get(
 router.get(
   "/products/:id/demand",
   predictDemand
+);
+
+router.get(
+  "/products/:id/revive",
+  reviveProduct
 );
 
 module.exports = router;
