@@ -6,6 +6,9 @@ const Seller = require("../models/Seller");
 const BusinessHealth = require("../models/BusinessHealth");
 const Analytics = require("../models/Analytics");
 
+const Product = require("../models/Product");
+const LiveSession = require("../models/LiveSession");
+
 dotenv.config();
 
 async function seedDatabase() {
@@ -19,8 +22,10 @@ async function seedDatabase() {
     await Seller.deleteMany({});
     await BusinessHealth.deleteMany({});
     await Analytics.deleteMany({});
+    await Product.deleteMany({});
+    await LiveSession.deleteMany({});
 
-    // Create a demo seller
+    // Create Seller
     const seller = await Seller.create({
       name: "Muskan Kohli",
       storeName: "Fashion Studio",
@@ -30,6 +35,71 @@ async function seedDatabase() {
       languages: ["English", "Hindi"],
     });
 
+    // Create Products
+    const products = await Product.insertMany([
+      {
+        sellerId: seller._id,
+        name: "Women's Cotton Kurti",
+        brand: "Fashion Studio",
+        price: 1499,
+        images: [
+          "https://images.unsplash.com/photo-1583391733956-6c78276477e2",
+        ],
+        sizes: ["S", "M", "L", "XL"],
+        stock: 42,
+        category: "Women's Fashion",
+      },
+      {
+        sellerId: seller._id,
+        name: "Printed Cotton Top",
+        brand: "Fashion Studio",
+        price: 899,
+        images: [
+          "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+        ],
+        sizes: ["S", "M", "L"],
+        stock: 58,
+        category: "Women's Fashion",
+      },
+      {
+        sellerId: seller._id,
+        name: "Summer Palazzo",
+        brand: "Fashion Studio",
+        price: 1199,
+        images: [
+          "https://images.unsplash.com/photo-1521572267360-ee0c2909d518",
+        ],
+        sizes: ["M", "L", "XL"],
+        stock: 35,
+        category: "Women's Fashion",
+      },
+      {
+        sellerId: seller._id,
+        name: "Floral Anarkali Kurta",
+        brand: "Fashion Studio",
+        price: 1899,
+        images: [
+          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+        ],
+        sizes: ["S", "M", "L", "XL"],
+        stock: 18,
+        category: "Ethnic Wear",
+      },
+      {
+        sellerId: seller._id,
+        name: "Linen Straight Pants",
+        brand: "Fashion Studio",
+        price: 1299,
+        images: [
+          "https://images.unsplash.com/photo-1541099649105-f69ad21f3246",
+        ],
+        sizes: ["M", "L", "XL"],
+        stock: 27,
+        category: "Bottom Wear",
+      },
+    ]);
+
+    // Create Business Health
     await BusinessHealth.create({
       sellerId: seller._id,
       orders: 248,
@@ -38,6 +108,7 @@ async function seedDatabase() {
       pendingPayments: 32500,
     });
 
+    // Create Analytics
     await Analytics.create({
       sellerId: seller._id,
 
@@ -49,15 +120,15 @@ async function seedDatabase() {
 
       topProducts: [
         {
-          name: "Women's Cotton Kurti",
+          name: products[0].name,
           revenue: 182000,
         },
         {
-          name: "Printed Cotton Top",
+          name: products[1].name,
           revenue: 126500,
         },
         {
-          name: "Summer Palazzo",
+          name: products[2].name,
           revenue: 98000,
         },
       ],
@@ -84,7 +155,18 @@ async function seedDatabase() {
       ],
     });
 
-    // Create opportunities
+    // Create Live Session
+    await LiveSession.create({
+      sellerId: seller._id,
+      title: "Weekend Ethnic Wear Live Sale",
+      status: "scheduled",
+      pinnedProductId: products[0]._id,
+      viewerCount: 0,
+      startedAt: null,
+      endedAt: null,
+    });
+
+    // Create Opportunities
     await Opportunity.insertMany([
       {
         sellerId: seller._id,
@@ -96,7 +178,10 @@ async function seedDatabase() {
         expectedRevenue: 45000,
         reasoning:
           "Summer ethnic wear is currently trending and inventory is available.",
-        recommendedProducts: [],
+        recommendedProducts: [
+          products[0]._id,
+          products[3]._id,
+        ],
       },
       {
         sellerId: seller._id,
@@ -108,7 +193,9 @@ async function seedDatabase() {
         expectedRevenue: 25000,
         reasoning:
           "Cotton tops have shown increased engagement during afternoon sessions.",
-        recommendedProducts: [],
+        recommendedProducts: [
+          products[1]._id,
+        ],
       },
       {
         sellerId: seller._id,
@@ -120,13 +207,16 @@ async function seedDatabase() {
         expectedRevenue: 60000,
         reasoning:
           "Weekend live sessions historically generate higher conversions.",
-        recommendedProducts: [],
+        recommendedProducts: [
+          products[0]._id,
+          products[2]._id,
+        ],
       },
     ]);
 
-    console.log("✅ Sample data inserted");
+    console.log("✅ Sample data inserted successfully");
 
-    process.exit();
+    process.exit(0);
   } catch (error) {
     console.error(error);
     process.exit(1);
