@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Card from "./ui/Card";
-import { explainOpportunity } from "../services/opportunityService";
+import {
+  explainOpportunity,
+  getDemandPrediction,
+} from "../services/opportunityService";
 
 function OpportunityCard({ opportunity }) {
   const isTopPick = opportunity.priority === "HIGH";
@@ -8,6 +11,10 @@ function OpportunityCard({ opportunity }) {
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiExplanation, setAIExplanation] = useState("");
   const [showAI, setShowAI] = useState(false);
+
+  const [loadingDemand, setLoadingDemand] = useState(false);
+  const [demandPrediction, setDemandPrediction] = useState(null);
+  const [showDemand, setShowDemand] = useState(false);
 
   async function handleExplain() {
     if (showAI) {
@@ -35,12 +42,45 @@ function OpportunityCard({ opportunity }) {
     }
   }
 
+  async function handleDemandPrediction() {
+    if (showDemand) {
+      setShowDemand(false);
+      return;
+    }
+
+    if (demandPrediction) {
+      setShowDemand(true);
+      return;
+    }
+
+    try {
+      setLoadingDemand(true);
+
+      // Change this if your Opportunity already has a productId
+      const productId =
+        opportunity.recommendedProducts?.[0];
+
+      if (!productId) {
+        alert("No recommended product found.");
+        return;
+      }
+
+      const data = await getDemandPrediction(productId);
+
+      setDemandPrediction(data.prediction || data.demand);
+      setShowDemand(true);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch demand prediction.");
+    } finally {
+      setLoadingDemand(false);
+    }
+  }
+
   return (
     <Card
       className={`mb-5 ${
-        isTopPick
-          ? "border-2 border-pink-500 shadow-lg"
-          : ""
+        isTopPick ? "border-2 border-pink-500 shadow-lg" : ""
       }`}
     >
       {isTopPick && (
@@ -97,7 +137,7 @@ function OpportunityCard({ opportunity }) {
         </div>
       </div>
 
-      <div className="mt-8 flex gap-3">
+      <div className="mt-8 flex flex-wrap gap-3">
         <button className="rounded-xl bg-pink-600 px-6 py-3 font-semibold text-white transition hover:bg-pink-700">
           Start Live
         </button>
@@ -109,6 +149,14 @@ function OpportunityCard({ opportunity }) {
         >
           {loadingAI ? "Loading..." : "✨ Why?"}
         </button>
+
+        <button
+          onClick={handleDemandPrediction}
+          disabled={loadingDemand}
+          className="rounded-xl border border-blue-300 px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loadingDemand ? "Loading..." : "📈 Demand Forecast"}
+        </button>
       </div>
 
       {showAI && (
@@ -117,9 +165,23 @@ function OpportunityCard({ opportunity }) {
             ✨ AI Explanation
           </h4>
 
-          <p className="mt-2 text-gray-700 leading-7 whitespace-pre-line">
+          <p className="mt-2 whitespace-pre-line leading-7 text-gray-700">
             {aiExplanation}
           </p>
+        </div>
+      )}
+
+      {showDemand && demandPrediction && (
+        <div className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
+          <h4 className="font-semibold text-blue-700">
+            📈 AI Demand Forecast
+          </h4>
+
+          <pre className="mt-2 whitespace-pre-wrap font-sans leading-7 text-gray-700">
+            {typeof demandPrediction === "string"
+              ? demandPrediction
+              : JSON.stringify(demandPrediction, null, 2)}
+          </pre>
         </div>
       )}
     </Card>
