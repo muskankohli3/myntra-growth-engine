@@ -1,82 +1,50 @@
 const mongoose = require("mongoose");
 
-const liveSessionSchema = new mongoose.Schema({
-  sellerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Seller",
-    required: true,
-  },
+const liveSessionSchema = new mongoose.Schema(
+  {
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+      required: true,
+    },
 
-  sellerName: {
-    type: String,
-    required: true,
-  },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-  title: {
-    type: String,
-    required: true,
-  },
+    status: {
+      type: String,
+      enum: ["scheduled", "live", "ended"],
+      default: "scheduled",
+    },
 
-  thumbnail: {
-    type: String,
-    default: "",
-  },
+    startedAt: {
+      type: Date,
+      default: null,
+    },
 
-  status: {
-    type: String,
-    enum: ["SCHEDULED", "LIVE", "ENDED"],
-    default: "LIVE",
-  },
+    endedAt: {
+      type: Date,
+      default: null,
+    },
 
-  category: {
-    type: String,
-    required: true,
-  },
-
-  language: {
-    type: String,
-    default: "English",
-  },
-
-  videoUrl: {
-    type: String,
-    required: true,
-  },
-
-  startTime: {
-    type: Date,
-    default: Date.now,
-  },
-
-  endTime: {
-    type: Date,
-    default: null,
-  },
-
-  viewerCount: {
-    type: Number,
-    default: 0,
-  },
-
-  likeCount: {
-    type: Number,
-    default: 0,
-  },
-
-  pinnedProductId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    default: null,
-  },
-
-  products: [
-    {
+    pinnedProductId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
+      default: null,
     },
-  ],
 
-  tags: [String],
-});
+    viewerCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("LiveSession", liveSessionSchema);

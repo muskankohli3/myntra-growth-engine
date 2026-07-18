@@ -1,10 +1,21 @@
 const express = require("express");
-const router = express.Router();
 
 const {
-  getAllLiveSessions,
+  getLiveSessions,
+  getLiveSessionById,
+  createLiveSession,
+  startLiveSession,
+  pinProduct,
 } = require("../controllers/liveSessionController");
 
-router.get("/", getAllLiveSessions);
+const router = express.Router();
+
+router.get("/", getLiveSessions);
+router.get("/:id", getLiveSessionById);
+
+router.post("/", createLiveSession);
+
+router.patch("/:id/start", startLiveSession);
+router.patch("/:id/pin", pinProduct);
 
 module.exports = router;
