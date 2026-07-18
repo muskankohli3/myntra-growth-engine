@@ -1,11 +1,11 @@
 import opportunities from "./mockOpportunityData";
 import aiSuggestions from "./mockAISuggestions";
 
-export function getOpportunities() {
+export function getMockOpportunities() {
   return opportunities;
 }
 
-export function getBusinessHealth() {
+export function getMockBusinessHealth() {
   return {
     orders: 124,
     revenue: "₹42.8K",
@@ -14,7 +14,7 @@ export function getBusinessHealth() {
   };
 }
 
-export function getGrowthScore() {
+export function getMockGrowthScore() {
   return {
     score: 68,
     recommendations: [
@@ -26,7 +26,7 @@ export function getGrowthScore() {
   };
 }
 
-export function getRecentLiveSession() {
+export function getMockRecentLiveSession() {
   return {
     product: "Linen Kurta",
     revenue: "₹12,450",
@@ -35,6 +35,6 @@ export function getRecentLiveSession() {
   };
 }
 
-export function getAISuggestions() {
+export function getMockAISuggestions() {
   return aiSuggestions;
 }
