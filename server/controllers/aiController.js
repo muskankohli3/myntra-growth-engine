@@ -13,6 +13,12 @@ const {
   generateReviveSuggestion,
 } = require("../services/gemini/reviveAI");
 
+const Analytics = require("../models/Analytics");
+
+const {
+  generateAnalyticsInsights,
+} = require("../services/gemini/analyticsAI");
+
 const explainOpportunity = async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.id);
@@ -98,8 +104,38 @@ const reviveProduct = async (req, res) => {
   }
 };
 
+const analyticsInsights = async (req, res) => {
+  try {
+    const analytics = await Analytics.findOne();
+
+    if (!analytics) {
+      return res.status(404).json({
+        success: false,
+        message: "Analytics not found",
+      });
+    }
+
+    const insights =
+      await generateAnalyticsInsights(analytics);
+
+    res.json({
+      success: true,
+      insights,
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   explainOpportunity,
   predictDemand,
   reviveProduct,
+  analyticsInsights,
 };

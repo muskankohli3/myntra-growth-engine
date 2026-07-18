@@ -6,6 +6,7 @@ const {
   explainOpportunity,
   predictDemand,
   reviveProduct,
+  analyticsInsights,
 } = require("../controllers/aiController");
 
 router.get(
@@ -21,6 +22,11 @@ router.get(
 router.get(
   "/products/:id/revive",
   reviveProduct
+);
+
+router.get(
+  "/analytics/insights",
+  analyticsInsights
 );
 
 module.exports = router;
