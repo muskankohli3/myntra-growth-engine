@@ -19,7 +19,11 @@ function ProductOverlay({ product, onClose }) {
         </button>
 
         <img
-          src={product.image}
+          src={
+            product.images?.length > 0
+              ? product.images[0]
+              : ""
+          }
           alt={product.name}
           className="w-full h-64 object-cover rounded-lg"
         />
@@ -33,7 +37,7 @@ function ProductOverlay({ product, onClose }) {
         </p>
 
         <p className="text-2xl font-bold mt-3">
-          ₹{product.finalPrice}
+          ₹{product.price}
         </p>
 
         <button

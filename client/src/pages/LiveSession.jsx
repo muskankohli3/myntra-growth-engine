@@ -6,81 +6,86 @@ import LiveChat from "../components/customer/LiveChat";
 import RecommendationPanel from "../components/customer/RecommendationPanel";
 import LiveEngagement from "../components/customer/LiveEngagement";
 
-const pinnedProduct = {
-  id: "prod-1",
-  name: "Women's Cotton Kurti",
-  brand: "Libas",
-  image: "https://via.placeholder.com/120",
-  finalPrice: 999,
-  discountPercentage: 33,
-};
-
 function LiveSession() {
   const { state } = useLocation();
+
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   if (!state) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <h1 className="text-3xl font-bold">No Live Session Found</h1>
+        <h1 className="text-3xl font-bold">
+          No Live Session Found
+        </h1>
       </div>
     );
   }
 
+  const pinnedProduct = state.pinnedProductId;
+
   return (
     <>
       <div className="min-h-screen bg-gray-50 p-8">
-        <h1 className="text-4xl font-bold mb-2">{state.title}</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          {state.title}
+        </h1>
 
-        <p className="text-gray-600">Seller: {state.seller}</p>
+        <p className="text-gray-600">
+          Seller: {state.sellerId?.storeName}
+        </p>
 
-        <p className="text-red-500 mb-6">{state.time}</p>
+        <p className="text-red-500 mb-6">
+          {state.status.toUpperCase()}
+        </p>
 
         <div className="grid grid-cols-12 gap-6">
           {/* LEFT SIDE */}
           <div className="col-span-8 space-y-6">
             <LiveEngagement />
 
-            {/* Live Stream */}
             <div className="h-[500px] bg-black rounded-xl flex items-center justify-center text-white text-3xl">
               Live Stream
             </div>
 
-            {/* Pinned Product */}
-            <div className="bg-white rounded-xl shadow p-5 flex items-center justify-between">
-              <div className="flex items-center gap-5">
-                <img
-                  src={pinnedProduct.image}
-                  alt={pinnedProduct.name}
-                  className="w-24 h-24 rounded-lg object-cover"
-                />
+            {pinnedProduct && (
+              <div className="bg-white rounded-xl shadow p-5 flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  <img
+                    src={
+                      pinnedProduct.images?.length > 0
+                        ? pinnedProduct.images[0]
+                        : ""
+                    }
+                    alt={pinnedProduct.name}
+                    className="w-24 h-24 rounded-lg object-cover"
+                  />
 
-                <div>
-                  <h2 className="text-xl font-semibold">
-                    {pinnedProduct.name}
-                  </h2>
+                  <div>
+                    <h2 className="text-xl font-semibold">
+                      {pinnedProduct.name}
+                    </h2>
 
-                  <p className="text-gray-500">{pinnedProduct.brand}</p>
+                    <p className="text-gray-500">
+                      {pinnedProduct.brand}
+                    </p>
 
-                  <p className="text-2xl font-bold mt-2">
-                    ₹{pinnedProduct.finalPrice}
-                  </p>
-
-                  <p className="text-pink-500">
-                    {pinnedProduct.discountPercentage}% OFF
-                  </p>
+                    <p className="text-2xl font-bold mt-2">
+                      ₹{pinnedProduct.price}
+                    </p>
+                  </div>
                 </div>
+
+                <button
+                  onClick={() =>
+                    setSelectedProduct(pinnedProduct)
+                  }
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg"
+                >
+                  View Product
+                </button>
               </div>
+            )}
 
-              <button
-                onClick={() => setSelectedProduct(pinnedProduct)}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg"
-              >
-                View Product
-              </button>
-            </div>
-
-            {/* Featured Products */}
             <div className="bg-white rounded-xl shadow p-5">
               <h2 className="text-2xl font-bold mb-5">
                 Featured Products

@@ -1,15 +1,51 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import live1 from "../../assets/images/live/live1.jpg";
 import live2 from "../../assets/images/live/live2.jpg";
-import { useNavigate } from "react-router-dom";
-import { liveSessions } from "../../services/customerService";
 
-const liveImages = {
-  1: live1,
-  2: live2,
-};
+import { getLiveSessions } from "../../services/customerApi";
+
+const liveImages = [live1, live2];
 
 function LiveShoppingSection() {
   const navigate = useNavigate();
+
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadSessions() {
+      try {
+        const data = await getLiveSessions();
+        console.log("Live Sessions:", data);
+        setSessions(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadSessions();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="px-6 py-6">
+        <p>Loading live sessions...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="px-6 py-6">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="px-6 py-6">
@@ -27,15 +63,15 @@ function LiveShoppingSection() {
       </div>
 
       <div className="grid grid-cols-2 gap-6">
-        {liveSessions.map((session) => (
+        {sessions.map((session, index) => (
           <div
-            key={session.id}
+            key={session._id}
             className="rounded-xl border bg-white p-4 shadow-sm"
           >
             <img
-            src={liveImages[session.id]}
-            alt={session.title}
-            className="w-full aspect-video object-contain rounded-lg bg-gray-100 mb-4"
+              src={liveImages[index % liveImages.length]}
+              alt={session.title}
+              className="w-full aspect-video object-contain rounded-lg bg-gray-100 mb-4"
             />
 
             <h3 className="font-semibold">
@@ -43,15 +79,15 @@ function LiveShoppingSection() {
             </h3>
 
             <p className="text-gray-500">
-              {session.seller}
+              {session.sellerId?.storeName || "Seller"}
             </p>
 
             <p className="text-sm text-red-500 mt-2">
-              {session.time}
+              {session.status.toUpperCase()}
             </p>
 
             <p className="text-sm text-gray-500">
-              👀 {session.viewers} watching
+              👀 {session.viewerCount} watching
             </p>
 
             <button

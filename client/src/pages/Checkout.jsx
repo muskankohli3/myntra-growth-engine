@@ -1,14 +1,45 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { createOrder } from "../services/orderService";
 
 function Checkout() {
   const navigate = useNavigate();
+  const [placingOrder, setPlacingOrder] = useState(false);
+
   const { cartItems, removeFromCart, clearCart } = useCart();
 
   const total = cartItems.reduce(
-    (sum, item) => sum + item.finalPrice,
+    (sum, item) => sum + item.price,
     0
   );
+
+  async function handlePlaceOrder() {
+    try {
+      setPlacingOrder(true);
+
+      console.log("Cart Items:", cartItems);
+
+      for (const item of cartItems) {
+        await createOrder({
+          productId: item._id,
+          liveSessionId: item.liveSessionId || null,
+          customerName: "Demo Customer",
+          quantity: 1,
+          price: item.price,
+        });
+      }
+
+      clearCart();
+
+      navigate("/customer/order-success");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to place order. Please try again.");
+    } finally {
+      setPlacingOrder(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -25,14 +56,18 @@ function Checkout() {
       ) : (
         <>
           <div className="space-y-4">
-            {cartItems.map((item, index) => (
+            {cartItems.map((item) => (
               <div
-                key={index}
+                key={item._id}
                 className="bg-white rounded-xl p-4 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={item.image}
+                    src={
+                      item.images?.length > 0
+                        ? item.images[0]
+                        : ""
+                    }
                     alt={item.name}
                     className="w-24 h-24 rounded-lg object-cover"
                   />
@@ -47,13 +82,13 @@ function Checkout() {
                     </p>
 
                     <p className="font-bold mt-2">
-                      ₹{item.finalPrice}
+                      ₹{item.price}
                     </p>
                   </div>
                 </div>
 
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item._id)}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg"
                 >
                   Remove
@@ -69,13 +104,11 @@ function Checkout() {
             </div>
 
             <button
-              onClick={() => {
-                clearCart();
-                navigate("/customer/order-success");
-              }}
-              className="mt-6 w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg"
+              onClick={handlePlaceOrder}
+              disabled={placingOrder}
+              className="mt-6 w-full bg-pink-500 hover:bg-pink-600 disabled:bg-gray-400 text-white py-3 rounded-lg"
             >
-              Place Order
+              {placingOrder ? "Placing Order..." : "Place Order"}
             </button>
           </div>
         </>
