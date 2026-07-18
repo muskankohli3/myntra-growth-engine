@@ -33,7 +33,12 @@ Respond ONLY in JSON:
     contents: prompt,
   });
 
-  return JSON.parse(response.text);
+  const cleaned = response.text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+
+  return JSON.parse(cleaned);
 }
 
 module.exports = {

@@ -6,8 +6,8 @@ You are an AI business analyst for Myntra sellers.
 
 Analyze these metrics:
 
-Revenue: ₹${analytics.revenue}
-Orders: ${analytics.orders}
+Revenue: ₹${analytics.totalRevenue}
+Orders: ${analytics.totalOrders}
 Conversion Rate: ${analytics.conversionRate}%
 Top Products:
 ${analytics.topProducts
@@ -37,7 +37,12 @@ Respond ONLY in JSON:
     contents: prompt,
   });
 
-  return JSON.parse(response.text);
+  const cleaned = response.text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+
+  return JSON.parse(cleaned);
 }
 
 module.exports = {
