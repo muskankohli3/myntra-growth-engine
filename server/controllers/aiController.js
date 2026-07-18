@@ -3,7 +3,7 @@ const {
   generateOpportunityReason,
 } = require("../services/gemini/opportunityAI");
 
-async function explainOpportunity(req, res) {
+const explainOpportunity = async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.id);
 
@@ -14,7 +14,8 @@ async function explainOpportunity(req, res) {
       });
     }
 
-    const explanation = await generateOpportunityReason(opportunity);
+    const explanation =
+      await generateOpportunityReason(opportunity);
 
     res.json({
       success: true,
@@ -28,7 +29,7 @@ async function explainOpportunity(req, res) {
       message: err.message,
     });
   }
-}
+};
 
 module.exports = {
   explainOpportunity,
