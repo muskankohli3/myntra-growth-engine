@@ -1,8 +1,8 @@
 import Card from "./ui/Card";
-import { getRecentLiveSession } from "../services/sellerService";
+import { getMockRecentLiveSession } from "../services/sellerService";
 
 function RecentLiveSessions() {
-  const session = getRecentLiveSession();
+  const session = getMockRecentLiveSession();
 
   return (
     <section className="mt-10">
