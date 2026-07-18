@@ -1,3 +1,4 @@
+require("../models/Seller");
 const Product = require("../models/Product");
 
 // GET /api/products
