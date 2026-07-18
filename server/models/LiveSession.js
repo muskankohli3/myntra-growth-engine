@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const liveSessionSchema = new mongoose.Schema(
   {
@@ -47,4 +47,4 @@ const liveSessionSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("LiveSession", liveSessionSchema);
+module.exports = mongoose.model("LiveSession", liveSessionSchema);

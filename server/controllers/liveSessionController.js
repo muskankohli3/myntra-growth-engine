@@ -1,7 +1,7 @@
-import LiveSession from "../models/LiveSession.js";
+const LiveSession = require("../models/LiveSession");
 
 // GET /api/live-sessions
-export const getLiveSessions = async (req, res) => {
+const getLiveSessions = async (req, res) => {
   try {
     const sessions = await LiveSession.find()
       .populate("sellerId")
@@ -9,12 +9,14 @@ export const getLiveSessions = async (req, res) => {
 
     res.status(200).json(sessions);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
 // GET /api/live-sessions/:id
-export const getLiveSessionById = async (req, res) => {
+const getLiveSessionById = async (req, res) => {
   try {
     const session = await LiveSession.findById(req.params.id)
       .populate("sellerId")
@@ -35,7 +37,7 @@ export const getLiveSessionById = async (req, res) => {
 };
 
 // POST /api/live-sessions
-export const createLiveSession = async (req, res) => {
+const createLiveSession = async (req, res) => {
   try {
     const session = await LiveSession.create(req.body);
 
@@ -48,7 +50,7 @@ export const createLiveSession = async (req, res) => {
 };
 
 // PATCH /api/live-sessions/:id/start
-export const startLiveSession = async (req, res) => {
+const startLiveSession = async (req, res) => {
   try {
     const session = await LiveSession.findByIdAndUpdate(
       req.params.id,
@@ -76,7 +78,7 @@ export const startLiveSession = async (req, res) => {
 };
 
 // PATCH /api/live-sessions/:id/pin
-export const pinProduct = async (req, res) => {
+const pinProduct = async (req, res) => {
   try {
     const session = await LiveSession.findByIdAndUpdate(
       req.params.id,
@@ -100,4 +102,12 @@ export const pinProduct = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+module.exports = {
+  getLiveSessions,
+  getLiveSessionById,
+  createLiveSession,
+  startLiveSession,
+  pinProduct,
 };
