@@ -1,6 +1,7 @@
 const aiSuggestions = [
   {
     id: 1,
+    productId: "6a5b7a009de3f015696786aa",
     priority: "HIGH",
     title: "Mention fabric quality",
     confidence: 96,
@@ -11,6 +12,7 @@ const aiSuggestions = [
   },
   {
     id: 2,
+    productId: "6a5b7a009de3f015696786aa",
     priority: "MEDIUM",
     title: "Show back design",
     confidence: 81,
@@ -21,6 +23,7 @@ const aiSuggestions = [
   },
   {
     id: 3,
+    productId: "6a5b7a009de3f015696786aa",
     priority: "LOW",
     title: "Mention today's combo offer",
     confidence: 73,

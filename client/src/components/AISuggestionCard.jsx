@@ -30,7 +30,7 @@ function AISuggestionCard({ suggestion }) {
       setLoading(true);
 
       const data = await getReviveSuggestion(
-        "6a5b7a009de3f015696786aa"
+        suggestion.productId
       );
 
       setReviveData(data.revive);
