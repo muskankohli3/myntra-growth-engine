@@ -52,3 +52,15 @@ export async function getReviveSuggestion(productId) {
 
   return response.json();
 }
+
+export async function getAnalyticsInsights() {
+  const response = await fetch(
+    `${API_BASE_URL}/ai/analytics/insights`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch analytics insights");
+  }
+
+  return response.json();
+}
