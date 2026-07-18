@@ -21,3 +21,15 @@ export async function explainOpportunity(id) {
 
   return response.json();
 }
+
+export async function getDemandPrediction(productId) {
+  const response = await fetch(
+    `${API_BASE_URL}/ai/products/${productId}/demand`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch demand prediction");
+  }
+
+  return response.json();
+}
