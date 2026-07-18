@@ -22,14 +22,9 @@ const io = new Server(server, {
   },
 });
 
-// Temporary connection logging
-io.on("connection", (socket) => {
-  console.log(`🟢 Socket connected: ${socket.id}`);
+const initializeSocket = require("./socket/socketHandler");
 
-  socket.on("disconnect", () => {
-    console.log(`🔴 Socket disconnected: ${socket.id}`);
-  });
-});
+initializeSocket(io);
 
 // Start server
 server.listen(PORT, () => {
