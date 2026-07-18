@@ -1,8 +1,8 @@
-import { getAISuggestions } from "../services/sellerService";
+import { getMockAISuggestions } from "../services/sellerService";
 import AISuggestionCard from "./AISuggestionCard";
 
 function AISuggestions() {
-  const suggestions = getAISuggestions();
+  const suggestions = getMockAISuggestions();
 
   return (
     <section>

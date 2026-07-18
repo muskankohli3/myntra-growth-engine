@@ -3,6 +3,12 @@ const {
   generateOpportunityReason,
 } = require("../services/gemini/opportunityAI");
 
+const Product = require("../models/Product");
+
+const {
+  generateDemandPrediction,
+} = require("../services/gemini/demandAI");
+
 const explainOpportunity = async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.id);
@@ -31,6 +37,35 @@ const explainOpportunity = async (req, res) => {
   }
 };
 
+const predictDemand = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const prediction =
+      await generateDemandPrediction(product);
+
+    res.json({
+      success: true,
+      prediction,
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   explainOpportunity,
+  predictDemand,
 };

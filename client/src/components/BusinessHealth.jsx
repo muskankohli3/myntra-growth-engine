@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MetricCard from "./MetricCard";
-import { getBusinessHealth } from "../services/businessHealthService";
+import { getBusinessHealth  } from "../services/businessHealthService";
 
 function BusinessHealth() {
   const [data, setData] = useState(null);
@@ -9,7 +9,7 @@ function BusinessHealth() {
   useEffect(() => {
     async function loadBusinessHealth() {
       try {
-        const businessHealth = await getBusinessHealth();
+        const businessHealth = await getBusinessHealth ();
         setData(businessHealth);
       } catch (error) {
         console.error(error);

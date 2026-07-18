@@ -1,8 +1,8 @@
 import Card from "./ui/Card";
-import { getGrowthScore } from "../services/sellerService";
+import { getMockGrowthScore } from "../services/sellerService";
 
 function GrowthScore() {
-  const data = getGrowthScore();
+  const data = getMockGrowthScore();
 
   return (
     <section className="mt-10">

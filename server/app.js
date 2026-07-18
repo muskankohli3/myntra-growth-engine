@@ -3,6 +3,10 @@ const cors = require("cors");
 
 const app = express();
 
+require("./models/Seller");
+require("./models/Product");
+require("./models/LiveSession");
+
 // Routes
 const opportunityRoutes = require("./routes/opportunityRoutes");
 const businessHealthRoutes = require("./routes/businessHealthRoutes");
