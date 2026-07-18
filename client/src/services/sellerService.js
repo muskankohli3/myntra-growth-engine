@@ -38,3 +38,17 @@ export function getMockRecentLiveSession() {
 export function getMockAISuggestions() {
   return aiSuggestions;
 }
+
+const API_BASE_URL = "http://localhost:5000/api";
+
+export async function getReviveSuggestion(productId) {
+  const response = await fetch(
+    `${API_BASE_URL}/ai/products/${productId}/revive`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch AI revive suggestion");
+  }
+
+  return response.json();
+}

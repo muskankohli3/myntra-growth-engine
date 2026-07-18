@@ -1,11 +1,46 @@
+import { useState } from "react";
 import Card from "./ui/Card";
+import { getReviveSuggestion } from "../services/sellerService";
 
 function AISuggestionCard({ suggestion }) {
+  const [loading, setLoading] = useState(false);
+  const [reviveData, setReviveData] = useState(null);
+  const [showSuggestion, setShowSuggestion] = useState(false);
+
   const priorityColor = {
     HIGH: "bg-red-100 text-red-600",
     MEDIUM: "bg-yellow-100 text-yellow-600",
     LOW: "bg-green-100 text-green-600",
   };
+
+  async function handleAISuggestion() {
+    // Collapse if already open
+    if (showSuggestion) {
+      setShowSuggestion(false);
+      return;
+    }
+
+    // Reuse cached response
+    if (reviveData) {
+      setShowSuggestion(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const data = await getReviveSuggestion(
+        "6a5b7a009de3f015696786aa"
+      );
+
+      setReviveData(data.revive);
+      setShowSuggestion(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Card className="mb-5">
@@ -28,14 +63,33 @@ function AISuggestionCard({ suggestion }) {
           Confidence: <strong>{suggestion.confidence}%</strong>
         </span>
 
-        <span>
-          {suggestion.category}
-        </span>
+        <span>{suggestion.category}</span>
       </div>
 
-      <button className="mt-6 rounded-xl bg-pink-600 px-4 py-2 text-white hover:bg-pink-700">
-        {suggestion.action}
+      <button
+        onClick={handleAISuggestion}
+        className="mt-6 rounded-xl bg-pink-600 px-4 py-2 text-white hover:bg-pink-700"
+      >
+        {loading ? "Generating..." : suggestion.action}
       </button>
+
+      {showSuggestion && reviveData && (
+        <div className="mt-6 rounded-xl border border-pink-200 bg-pink-50 p-4">
+          <h4 className="font-semibold text-pink-700">
+            ✨ AI Revive Suggestion
+          </h4>
+
+          <p className="mt-3 text-gray-700">
+            <strong>Problem:</strong> {reviveData.problem}
+          </p>
+
+          <ul className="mt-3 list-disc pl-5 text-gray-700 space-y-2">
+            {reviveData.suggestions.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Card>
   );
 }
