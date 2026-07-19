@@ -1,5 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import socket from "../services/socket";
 
 import ProductOverlay from "../components/customer/ProductOverlay";
 import LiveChat from "../components/customer/LiveChat";
@@ -21,6 +23,51 @@ function LiveSession() {
     );
   }
 
+  // Live session ID received from navigation
+  const liveSessionId = state._id;
+
+  // NEW: Live status that updates via Socket.IO
+  const [liveStatus, setLiveStatus] = useState(state.status);
+
+  // Join / Leave socket room
+  useEffect(() => {
+    if (!liveSessionId) return;
+
+    socket.emit("join-live-session", liveSessionId);
+
+    console.log("Joined room:", liveSessionId);
+
+    return () => {
+      socket.emit("leave-live-session", liveSessionId);
+      console.log("Left room:", liveSessionId);
+    };
+  }, [liveSessionId]);
+
+  // Listen for live events
+  useEffect(() => {
+    const handleLiveStarted = (data) => {
+      if (data.liveSessionId === liveSessionId) {
+        console.log("🔴 Live started:", data);
+        setLiveStatus("live");
+      }
+    };
+
+    const handleLiveEnded = (data) => {
+      if (data.liveSessionId === liveSessionId) {
+        console.log("⛔ Live ended:", data);
+        setLiveStatus("ended");
+      }
+    };
+
+    socket.on("live-started", handleLiveStarted);
+    socket.on("live-ended", handleLiveEnded);
+
+    return () => {
+      socket.off("live-started", handleLiveStarted);
+      socket.off("live-ended", handleLiveEnded);
+    };
+  }, [liveSessionId]);
+
   const pinnedProduct = state.pinnedProductId;
 
   return (
@@ -34,8 +81,16 @@ function LiveSession() {
           Seller: {state.sellerId?.storeName}
         </p>
 
-        <p className="text-red-500 mb-6">
-          {state.status.toUpperCase()}
+        <p
+          className={`mb-6 font-semibold ${
+            liveStatus === "live"
+              ? "text-green-600"
+              : liveStatus === "ended"
+              ? "text-red-500"
+              : "text-yellow-500"
+          }`}
+        >
+          {liveStatus.toUpperCase()}
         </p>
 
         <div className="grid grid-cols-12 gap-6">
@@ -76,9 +131,7 @@ function LiveSession() {
                 </div>
 
                 <button
-                  onClick={() =>
-                    setSelectedProduct(pinnedProduct)
-                  }
+                  onClick={() => setSelectedProduct(pinnedProduct)}
                   className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg"
                 >
                   View Product
